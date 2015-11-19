@@ -17,7 +17,7 @@ import glob from 'glob';
 // url("...")
 
 const urlPrefixConfig = [
-  { ext: 'www/**/*.html',
+  { ext: '**/*.html',
     urlstrings: [
     {
       regMatch: /href=\"\//gm, // <link>, <a>, <use>
@@ -29,7 +29,7 @@ const urlPrefixConfig = [
       regMatch: /action=\"\//gm, // <form>
     }]
   },
-  { ext: 'www/**/*.css',
+  { ext: '**/*.css',
     urlstrings: [
     {
       regMatch: /url\(\"\//gm, // <@font-face etc.
@@ -38,14 +38,13 @@ const urlPrefixConfig = [
 ];
 
 
-function prefixUrls(versionPrefix) {
+function prefixUrls(dir, versionPrefix) {
 
   urlPrefixConfig.forEach(filetype => {
-    console.log(`Prefixing URLs for ${filetype.ext} with ${versionPrefix}`);
-    glob.sync(filetype.ext).forEach( f => {
-      
+    let fileCount = 0;
+    glob.sync(`${dir}/${filetype.ext}`).forEach( f => {
+      fileCount++;
       let fileContents = fs.readFileSync(f, 'utf8');
-
       filetype.urlstrings.forEach(u => {
         fileContents = fileContents.replace(u.regMatch, match => 
           match + versionPrefix + '/'
@@ -54,6 +53,7 @@ function prefixUrls(versionPrefix) {
 
       fs.writeFileSync(f, fileContents);
     });
+    console.log(`Prefixing the URLs in ${fileCount} files matching ${dir}/${filetype.ext} with ${versionPrefix}`);
   });
 }
 

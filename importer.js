@@ -1,3 +1,3 @@
-import prefixUrls from './urlPrefixer';
+import prefixUrls from './url-prefixer';
 
-prefixUrls('SCHMOO');
+prefixUrls('www2', 'SCHMOO');
